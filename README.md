@@ -96,13 +96,11 @@ days_without_start = calculate_days_from_dates(start, end, include_start=False) 
 
 # Changelog
 
-## v0.1.0 (2024-01-01)
+## v0.1.0 (2025-07-07)
 - Initial release  
 - Basic date calculation functions  
 - Pydantic v2 input validation  
 - Comprehensive test suite  
-
----
 
 # License
 

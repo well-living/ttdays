@@ -8,7 +8,7 @@ We welcome bug reports, feature suggestions, documentation improvements, and pul
 ### 1. Clone the repository
 
 '''
-git clone https://github.com/your-username/ttdays.git
+git clone git@github.com:well-living/ttdays.git
 cd ttdays
 '''
 
@@ -40,7 +40,6 @@ pre-commit run --all-files
 pytest
 '''
 
----
 
 ## Linting
 
@@ -136,7 +135,6 @@ twine upload dist/*
 - Ensure pre-commit and tests pass locally before pushing
 - Use the PR template and follow the style of existing code
 
----
 
 ## License
 
