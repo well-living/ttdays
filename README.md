@@ -1,4 +1,4 @@
-# ttDays
+# ttDays: 
 A tool that calculates how many days have passed between a given start date (e.g., a person's birthday or a company's founding date) and an end date (e.g., today), or determines a specific date based on a start date and a number of elapsed days (e.g., what date it will be on the 10000th day since birth).
 
 ## Installation
@@ -106,15 +106,18 @@ days_without_start = calculate_days_from_dates(start, end, include_start=False) 
 
 # License
 
-MIT License – see `LICENSE` file for details.
+[MIT License](LICENSE)
 
----
+
+# Documentation
+
+- **Documentation**: [https://ttdays.readthedocs.io/](https://ttdays.readthedocs.io/)
 
 # Support
 
-- **Documentation**: [https://ttdays.readthedocs.io/](https://ttdays.readthedocs.io/)  
+
 - **Issues**: [https://github.com/well-living/ttdays/issues](https://github.com/well-living/ttdays/issues)  
-- **PyPI**: [https://pypi.org/project/date-calculator/](https://pypi.org/project/date-calculator/)  
+- **PyPI**: [https://pypi.org/project/ttdays/](https://pypi.org/project/ttdays/)  
 
 ---
 
@@ -122,9 +125,11 @@ MIT License – see `LICENSE` file for details.
 
 [@well-living](https://github.com/well-living) – GitHub
 
----
+
 
 # Acknowledgments
 
 - Built with [Pydantic](https://docs.pydantic.dev/) for robust data validation  
 - Inspired by common date calculation needs in business applications
+
+
