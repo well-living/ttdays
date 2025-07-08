@@ -2,7 +2,7 @@
 from datetime import date, timedelta
 from typing import Union
 
-from .date_models import DateCalculationRequest
+from .date_model import DateModel
 
 
 class DateCalculator:
