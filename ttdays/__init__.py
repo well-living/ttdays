@@ -10,12 +10,12 @@ from .functions import (
     calculate_end_date,
     calculate_start_date
 )
-from .date_models import DateCalculationRequest
+from .date_model import DateModel
 
 __version__ = "0.1.0"
 __all__ = [
     "DateCalculator",
-    "DateCalculationRequest",
+    "DateModel",
     "calculate_days_from_dates",
     "calculate_end_date",
     "calculate_start_date",
