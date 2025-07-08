@@ -1,29 +1,39 @@
+# この GitHub Actions ワークフローの名前。GitHub 上での表示名になります。
 name: Run Tests & Lint
 
+# どのイベントでワークフローを起動するか。ここでは push と pull_request に反応。
 on: [push, pull_request]
 
 jobs:
+  # "build" というジョブ名。1つの仮想マシン上で実行される処理のまとまりです。
   build:
+    # 使用する仮想環境の種類。ここでは Ubuntu の最新版。
     runs-on: ubuntu-latest
 
     steps:
+      # ステップ1: このリポジトリのコードをチェックアウト（クローン）します。
       - name: Checkout
         uses: actions/checkout@v4
 
+      # ステップ2: Python 3.12 をセットアップします。
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      # ステップ3: 開発用の依存関係をインストールします。
+      # pip を最新にアップグレードした後、setup.py や pyproject.toml に基づく開発パッケージをインストール。
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e .[dev]
 
-      # 初回用: Ruff のエラーでもCIを止めずにワーニングだけにする
+      # ステップ4: Ruff によるコードリント（静的解析）を実行。
+      # 初回導入用の設定で、エラーがあっても CI を失敗にせず、警告として処理します。
       - name: Ruff Lint (non-blocking)
-        continue-on-error: true
+        continue-on-error: true  # エラーが出ても CI を止めない
         run: ruff check .
 
+      # ステップ5: pytest を使ってテストを実行し、ttdays モジュールのカバレッジも計測します。
       - name: Run Tests with Coverage
         run: pytest --cov=ttdays
