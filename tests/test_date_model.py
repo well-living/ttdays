@@ -3,7 +3,7 @@ import datetime
 import pytest
 from pydantic import ValidationError
 
-from date_model import DateModel
+from ttdays.date_model import DateModel
 
 
 class TestDateModel:

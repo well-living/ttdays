@@ -32,16 +32,16 @@ pytest --cov=date_model --cov=date_calculator --cov=functions test_date_model.py
 
 #### Run specific test files
 ```bash
-pytest test_date_model.py
-pytest test_date_calculator.py
-pytest test_functions.py
+pytest tests/test_date_model.py
+pytest tests/test_date_calculator.py
+pytest tests/test_functions.py
 ```
 
 #### Run specific test methods
 ```bash
-pytest test_date_model.py::TestDateModel::test_valid_field_combinations
-pytest test_date_calculator.py::TestDateCalculator::test_calculate_days_from_dates_valid
-pytest test_functions.py::TestCalculateDaysFromDates::test_calculate_days_from_dates_valid
+pytest tests/test_date_model.py::TestDateModel::test_valid_field_combinations -v
+pytest tests/test_date_calculator.py::TestDateCalculator::test_calculate_days_from_dates_valid -v
+pytest tests/test_functions.py::TestCalculateDaysFromDates::test_calculate_days_from_dates_valid -v
 ```
 
 #### Run tests with parametrized test details
