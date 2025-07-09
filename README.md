@@ -1,4 +1,4 @@
-# ttDays: Powerful Date Calculation Library
+# ttDays: Simple Date Calculation Library
 
 A comprehensive Python library for calculating days between dates, determining specific dates based on elapsed days, and handling complex date arithmetic with precision. Perfect for applications involving birthdays, project timelines, anniversaries, and business date calculations.
 
