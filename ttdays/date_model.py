@@ -38,7 +38,11 @@ class NullableDate(BaseModel):
     >>> print(complete_date.date)  # 2023-12-25
     """
     
-    year: int = Field(ge=1, le=9999)
+    year: int = Field(
+        ge=1900, 
+        le=2500, 
+        description="The year of the date (1900-2500)"
+    )
     month: Optional[int] = Field(None, ge=1, le=12)
     day: Optional[int] = Field(None, ge=1, le=31)
     
@@ -141,10 +145,14 @@ class DatePeriod(BaseModel):
     
     start_date: Optional[datetime.date] = Field(
         default=None, 
+        ge=datetime.date(1900, 1, 1),
+        le=datetime.date(2500, 12, 31),
         description="The start date of the range"
     )
     end_date: Optional[datetime.date] = Field(
         default=None, 
+        ge=datetime.date(1900, 1, 1),
+        le=datetime.date(2500, 12, 31),
         description="The end date of the range"
     )
     days: Optional[int] = Field(
