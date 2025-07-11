@@ -4,7 +4,7 @@ This package provides functionality for calculating date-related values
 given two of the three parameters: start_date, end_date, and days.
 """
 
-from .date_model import DateModel
+from .date_model import DatePeriod
 from .date_calculator import DateCalculator
 from .functions import (
     calculate_days_from_dates,
@@ -13,9 +13,9 @@ from .functions import (
 )
 
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = [
-    "DateModel",
+    "DatePeriod",
     "DateCalculator",
     "calculate_days_from_dates",
     "calculate_start_date",

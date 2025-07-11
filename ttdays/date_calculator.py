@@ -2,7 +2,7 @@
 import datetime
 from typing import Union
 
-from .date_model import DateModel
+from .date_model import DatePeriod
 
 
 class DateCalculator:
@@ -95,7 +95,7 @@ class DateCalculator:
         parsed_start = self._parse_date(start_date)
         parsed_end = self._parse_date(end_date)
         
-        dm = DateModel(
+        dm = DatePeriod(
             start_date=parsed_start,
             end_date=parsed_end,
             include_start=include_start
@@ -144,7 +144,7 @@ class DateCalculator:
         """
         parsed_end = self._parse_date(end_date)
         
-        dm = DateModel(
+        dm = DatePeriod(
             end_date=parsed_end,
             days=days,
             include_start=include_start
@@ -193,7 +193,7 @@ class DateCalculator:
         """
         parsed_start = self._parse_date(start_date)
         
-        dm = DateModel(
+        dm = DatePeriod(
             start_date=parsed_start,
             days=days,
             include_start=include_start
