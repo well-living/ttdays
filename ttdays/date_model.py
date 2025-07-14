@@ -1,7 +1,6 @@
 # date_model.py
 import datetime
-from typing import Optional
-
+from typing import Optional, Union
 from pydantic import BaseModel, Field, field_validator, model_validator, computed_field
 
 
@@ -143,25 +142,54 @@ class DatePeriod(BaseModel):
     
     model_config = {"frozen": True, "extra": "forbid"}
     
-    start_date: Optional[datetime.date] = Field(
-        default=None, 
-        ge=datetime.date(1900, 1, 1),
-        le=datetime.date(2500, 12, 31),
-        description="The start date of the range"
+    start_date: Optional[Union[datetime.date, "NullableDate"]] = Field(
+        default=None,
+        description="The start date of the range (datetime.date or NullableDate)"
     )
-    end_date: Optional[datetime.date] = Field(
-        default=None, 
-        ge=datetime.date(1900, 1, 1),
-        le=datetime.date(2500, 12, 31),
-        description="The end date of the range"
+    end_date: Optional[Union[datetime.date, "NullableDate"]] = Field(
+        default=None,
+        description="The end date of the range (datetime.date or NullableDate)"
+    )
+    years: Optional[int] = Field(
+        default=None,
+        ge=0,
+        le=1000,
+        description="Number of years for calculation (0 to 1000)"
+    )
+    months: Optional[int] = Field(
+        default=None,
+        ge=0,
+        le=12000,
+        description="Number of months for calculation (0 to 12000)"
     )
     days: Optional[int] = Field(
         default=None,
         ge=0,
-        le=1000000,
-        description="Number of days for calculation (0 to 1000000)"
+        le=5000000,
+        description="Number of days for calculation (0 to 5000000)"
     )
     include_start: bool = Field(default=True, description="Whether to include the start date in the calculation")
+    
+    def _get_date_value(self, date_field: Optional[Union[datetime.date, "NullableDate"]]) -> Optional[datetime.date]:
+        """
+        Extract datetime.date from either datetime.date or NullableDate.
+        
+        Parameters
+        ----------
+        date_field : Optional[Union[datetime.date, NullableDate]]
+            The date field to extract from
+            
+        Returns
+        -------
+        Optional[datetime.date]
+            The extracted date or None if not available
+        """
+        if date_field is None:
+            return None
+        elif isinstance(date_field, datetime.date):
+            return date_field
+        else:  # NullableDate
+            return date_field.date
     
     @model_validator(mode='after')
     def validate_date_consistency(self) -> 'DatePeriod':
@@ -169,7 +197,7 @@ class DatePeriod(BaseModel):
         
         Returns
         -------
-        DateModel
+        DatePeriod
             The validated model instance
             
         Raises
@@ -177,15 +205,18 @@ class DatePeriod(BaseModel):
         ValueError
             If start_date is after end_date
         """
-        if (self.start_date is not None and 
-            self.end_date is not None and 
-            self.start_date > self.end_date):
+        start_date_value = self._get_date_value(self.start_date)
+        end_date_value = self._get_date_value(self.end_date)
+        
+        if (start_date_value is not None and 
+            end_date_value is not None and 
+            start_date_value > end_date_value):
             raise ValueError("Start date cannot be after end date")
         return self
     
     @model_validator(mode='after')
     def validate_required_fields(self) -> 'DatePeriod':
-        """Validate that at least two of the three fields are provided.
+        """Validate that at least two of the three main fields are provided.
         
         Returns
         -------
@@ -205,5 +236,30 @@ class DatePeriod(BaseModel):
         
         if provided_fields < 2:
             raise ValueError("At least two of start_date, end_date, or days must be provided")
+        
+        return self
+    
+    @model_validator(mode='after')
+    def validate_complete_dates_for_calculations(self) -> 'DatePeriod':
+        """Validate that if NullableDate is used, it has complete date information for calculations.
+        
+        Returns
+        -------
+        DatePeriod
+            The validated model instance
+            
+        Raises
+        ------
+        ValueError
+            If NullableDate doesn't have complete date information
+        """
+        def _check_nullable_date_completeness(date_field, field_name):
+            if date_field is not None and not isinstance(date_field, datetime.date):
+                # It's a NullableDate
+                if date_field.date is None:
+                    raise ValueError(f"{field_name} as NullableDate must have complete date information (year, month, day) for calculations")
+        
+        _check_nullable_date_completeness(self.start_date, "start_date")
+        _check_nullable_date_completeness(self.end_date, "end_date")
         
         return self
