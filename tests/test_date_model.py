@@ -3,16 +3,16 @@ import datetime
 import pytest
 from pydantic import ValidationError
 
-from ttdays.date_model import DateModel
+from ttdays.date_model import DatePeriod
 
 
-class TestDateModel:
-    """Test suite for DateModel class."""
+class TestDatePeriod:
+    """Test suite for DatePeriod class."""
     
     def test_default_values(self):
         """Test that default values are set correctly."""
         # Test with minimum required fields (start_date and end_date)
-        model = DateModel(
+        model = DatePeriod(
             start_date=datetime.date(2023, 1, 1),
             end_date=datetime.date(2023, 1, 10)
         )
@@ -39,7 +39,7 @@ class TestDateModel:
     ])
     def test_valid_field_combinations(self, start_date, end_date, days, include_start):
         """Test valid combinations of input fields."""
-        model = DateModel(
+        model = DatePeriod(
             start_date=start_date,
             end_date=end_date,
             days=days,
@@ -53,14 +53,14 @@ class TestDateModel:
     def test_same_start_and_end_date(self):
         """Test that same start and end dates are valid."""
         same_date = datetime.date(2023, 1, 1)
-        model = DateModel(start_date=same_date, end_date=same_date)
+        model = DatePeriod(start_date=same_date, end_date=same_date)
         assert model.start_date == same_date
         assert model.end_date == same_date
     
     def test_date_consistency_validation_failure(self):
         """Test that start_date after end_date raises ValueError."""
         with pytest.raises(ValidationError) as exc_info:
-            DateModel(
+            DatePeriod(
                 start_date=datetime.date(2023, 1, 10),
                 end_date=datetime.date(2023, 1, 1)
             )
@@ -81,7 +81,7 @@ class TestDateModel:
     def test_required_fields_validation_failure(self, start_date, end_date, days):
         """Test that providing less than two fields raises ValueError."""
         with pytest.raises(ValidationError) as exc_info:
-            DateModel(
+            DatePeriod(
                 start_date=start_date,
                 end_date=end_date,
                 days=days
@@ -99,7 +99,7 @@ class TestDateModel:
     def test_days_field_validation_failure(self, invalid_days):
         """Test that invalid days values raise ValidationError."""
         with pytest.raises(ValidationError) as exc_info:
-            DateModel(
+            DatePeriod(
                 start_date=datetime.date(2023, 1, 1),
                 days=invalid_days
             )
@@ -112,14 +112,14 @@ class TestDateModel:
     def test_days_boundary_values(self):
         """Test boundary values for days field."""
         # Test minimum boundary (0)
-        model_min = DateModel(
+        model_min = DatePeriod(
             start_date=datetime.date(2023, 1, 1),
             days=0
         )
         assert model_min.days == 0
         
         # Test maximum boundary (1000000)
-        model_max = DateModel(
+        model_max = DatePeriod(
             start_date=datetime.date(2023, 1, 1),
             days=1000000
         )
@@ -127,7 +127,7 @@ class TestDateModel:
     
     def test_model_immutability(self):
         """Test that the model is immutable (frozen=True)."""
-        model = DateModel(
+        model = DatePeriod(
             start_date=datetime.date(2023, 1, 1),
             end_date=datetime.date(2023, 1, 10)
         )
@@ -139,7 +139,7 @@ class TestDateModel:
     def test_extra_fields_forbidden(self):
         """Test that extra fields are not allowed (extra='forbid')."""
         with pytest.raises(ValidationError) as exc_info:
-            DateModel(
+            DatePeriod(
                 start_date=datetime.date(2023, 1, 1),
                 end_date=datetime.date(2023, 1, 10),
                 extra_field="not_allowed"
@@ -151,7 +151,7 @@ class TestDateModel:
     def test_field_descriptions(self):
         """Test that field descriptions are correctly set."""
         # Access the model's field info to verify descriptions
-        fields = DateModel.model_fields
+        fields = DatePeriod.model_fields
         
         assert fields['start_date'].description == "The start date of the range"
         assert fields['end_date'].description == "The end date of the range"
@@ -161,10 +161,10 @@ class TestDateModel:
     def test_model_config(self):
         """Test that model configuration is correctly applied."""
         # Test that the model is frozen
-        assert DateModel.model_config['frozen'] is True
+        assert DatePeriod.model_config['frozen'] is True
         
         # Test that extra fields are forbidden
-        assert DateModel.model_config['extra'] == 'forbid'
+        assert DatePeriod.model_config['extra'] == 'forbid'
     
     @pytest.mark.parametrize("date_str,expected_date", [
         ("2023-01-01", datetime.date(2023, 1, 1)),
@@ -173,7 +173,7 @@ class TestDateModel:
     ])
     def test_date_string_parsing(self, date_str, expected_date):
         """Test that date strings are correctly parsed."""
-        model = DateModel(
+        model = DatePeriod(
             start_date=date_str,
             end_date=expected_date
         )
@@ -183,14 +183,14 @@ class TestDateModel:
     def test_invalid_date_string(self):
         """Test that invalid date strings raise ValidationError."""
         with pytest.raises(ValidationError):
-            DateModel(
+            DatePeriod(
                 start_date="invalid-date",
                 end_date=datetime.date(2023, 1, 10)
             )
     
     def test_model_serialization(self):
         """Test that the model can be serialized to dict."""
-        model = DateModel(
+        model = DatePeriod(
             start_date=datetime.date(2023, 1, 1),
             end_date=datetime.date(2023, 1, 10),
             days=9,
@@ -209,7 +209,7 @@ class TestDateModel:
     
     def test_model_json_serialization(self):
         """Test that the model can be serialized to JSON."""
-        model = DateModel(
+        model = DatePeriod(
             start_date=datetime.date(2023, 1, 1),
             end_date=datetime.date(2023, 1, 10)
         )

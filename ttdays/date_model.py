@@ -1,8 +1,18 @@
-# date_model.py
+# ttdays/date_model.py
 import datetime
 from typing import Optional, Union
 from pydantic import BaseModel, Field, field_validator, model_validator, computed_field
 
+
+YEAR_MIN = 1900
+YEAR_MAX = 2200
+MONTH_MIN = 1
+MONTH_MAX = 12
+DAY_MIN = 1
+DAY_MAX = 31
+YEARS_MAX = YEAR_MAX - YEAR_MIN + 1
+MONTHS_MAX = YEARS_MAX * 12
+DAYS_MAX = MONTHS_MAX * 366  # Maximum days considering leap years
 
 class NullableDate(BaseModel):
     """
@@ -38,12 +48,12 @@ class NullableDate(BaseModel):
     """
     
     year: int = Field(
-        ge=1900, 
-        le=2500, 
-        description="The year of the date (1900-2500)"
+        ge=YEAR_MIN, 
+        le=YEAR_MAX, 
+        description="The year of the date (1900-2200)"
     )
-    month: Optional[int] = Field(None, ge=1, le=12)
-    day: Optional[int] = Field(None, ge=1, le=31)
+    month: Optional[int] = Field(None, ge=MONTH_MIN, le=MONTH_MAX)
+    day: Optional[int] = Field(None, ge=DAY_MIN, le=DAY_MAX)
     
     @field_validator('day')
     @classmethod
@@ -153,19 +163,19 @@ class DatePeriod(BaseModel):
     years: Optional[int] = Field(
         default=None,
         ge=0,
-        le=1000,
+        le=YEARS_MAX,
         description="Number of years for calculation (0 to 1000)"
     )
     months: Optional[int] = Field(
         default=None,
         ge=0,
-        le=12000,
+        le=MONTHS_MAX,
         description="Number of months for calculation (0 to 12000)"
     )
     days: Optional[int] = Field(
         default=None,
         ge=0,
-        le=5000000,
+        le=DAYS_MAX,
         description="Number of days for calculation (0 to 5000000)"
     )
     include_start: bool = Field(default=True, description="Whether to include the start date in the calculation")
